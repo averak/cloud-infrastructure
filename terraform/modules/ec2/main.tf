@@ -37,11 +37,20 @@ resource "aws_instance" "main" {
   user_data = <<-EOF
     #!/usr/bin/env bash
     yum update -y
+    amazon-linux-extras enable nginx1
     wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
     rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
     yum upgrade -y
     yum install -y java-17-amazon-corretto-headless
-    yum install jenkins -y
+    yum install -y jenkins docker
+
+    systemctl start docker
+    systemctl start jenkins
+    systemctl start nginx
+    systemctl enable docker
+    systemctl enable jenkins
+    systemctl enable nginx
   EOF
 
   tags = {
