@@ -3,6 +3,7 @@ resource "aws_lb" "main" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.main.id]
+  subnets            = var.public_subnet_ids
 
   access_logs {
     bucket = aws_s3_bucket.main.bucket
@@ -13,6 +14,7 @@ resource "aws_lb_target_group" "main" {
   name     = "${replace(var.domain, ".", "-")}-alb-target-group"
   port     = 80
   protocol = "HTTP"
+  vpc_id   = var.vpc_id
 
   health_check {
     path                = "/"
@@ -59,7 +61,8 @@ resource "aws_lb_listener_rule" "main" {
 }
 
 resource "aws_security_group" "main" {
-  name = "${var.domain}-alb-sg"
+  name   = "${var.domain}-alb-sg"
+  vpc_id = var.vpc_id
 }
 
 resource "aws_security_group_rule" "main-ingress-http" {
@@ -71,7 +74,7 @@ resource "aws_security_group_rule" "main-ingress-http" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group_rule" "main-ingress-http3" {
+resource "aws_security_group_rule" "main-ingress-https" {
   security_group_id = aws_security_group.main.id
   type              = "ingress"
   protocol          = "tcp"
