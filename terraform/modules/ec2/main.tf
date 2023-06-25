@@ -71,13 +71,21 @@ resource "aws_security_group" "main" {
   name = "${var.domain}-instance-sg"
 }
 
-
-resource "aws_security_group_rule" "main-ingress" {
+resource "aws_security_group_rule" "main-ingress-ssh" {
   security_group_id = aws_security_group.main.id
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 22
   to_port           = 22
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "main-ingress-http" {
+  security_group_id = aws_security_group.main.id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 80
+  to_port           = 80
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
