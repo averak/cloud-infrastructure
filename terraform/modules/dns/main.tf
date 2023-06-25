@@ -5,12 +5,11 @@ resource "aws_route53_zone" "main" {
 resource "aws_route53_record" "cert_validations" {
   count = length(aws_acm_certificate.main.domain_validation_options)
 
-  zone_id         = aws_route53_zone.main.zone_id
-  name            = aws_acm_certificate.main.domain_validation_options[count.index].resource_record_name
-  type            = aws_acm_certificate.main.domain_validation_options[count.index].resource_record_type
-  records         = [aws_acm_certificate.main.domain_validation_options[count.index].resource_record_value]
-  ttl             = 3600
-  allow_overwrite = true
+  zone_id = aws_route53_zone.main.zone_id
+  name    = element(aws_acm_certificate.main.domain_validation_options.*.resource_record_name, count.index)
+  type    = element(aws_acm_certificate.main.domain_validation_options.*.resource_record_type, count.index)
+  records = [element(aws_acm_certificate.main.domain_validation_options.*.resource_record_value, count.index)]
+  ttl     = 60
 }
 
 resource "aws_acm_certificate" "main" {
