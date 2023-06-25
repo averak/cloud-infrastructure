@@ -4,10 +4,6 @@ resource "aws_lb" "main" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.main.id]
   subnets            = var.public_subnet_ids
-
-  access_logs {
-    bucket = aws_s3_bucket.main.bucket
-  }
 }
 
 resource "aws_lb_target_group" "main" {
@@ -90,8 +86,4 @@ resource "aws_security_group_rule" "main-egress" {
   from_port         = 0
   to_port           = 0
   cidr_blocks       = ["0.0.0.0/0"]
-}
-
-resource "aws_s3_bucket" "main" {
-  bucket = "${var.domain}-alb-access-log"
 }

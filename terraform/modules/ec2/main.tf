@@ -37,21 +37,21 @@ resource "aws_instance" "main" {
 
   user_data = <<-EOF
     #!/usr/bin/env bash
-    sudo yum update -y
-    sudo amazon-linux-extras enable nginx1
-    sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
-    sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+    yum update -y
+    amazon-linux-extras enable nginx1
+    wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+    rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
 
-    sudo yum upgrade -y
-    sudo yum install -y java-17-amazon-corretto-headless
-    sudo yum install -y jenkins docker nginx
+    yum upgrade -y
+    yum install -y java-17-amazon-corretto-headless
+    yum install -y jenkins docker nginx
 
-    sudo systemctl start docker
-    sudo systemctl start jenkins
-    sudo systemctl start nginx
-    sudo systemctl enable docker
-    sudo systemctl enable jenkins
-    sudo systemctl enable nginx
+    systemctl start docker
+    systemctl start jenkins
+    systemctl start nginx
+    systemctl enable docker
+    systemctl enable jenkins
+    systemctl enable nginx
   EOF
 
   tags = {
@@ -83,12 +83,12 @@ resource "aws_security_group_rule" "main-ingress-ssh" {
 }
 
 resource "aws_security_group_rule" "main-ingress-http" {
-  security_group_id = aws_security_group.main.id
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 80
-  to_port           = 80
-  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id        = aws_security_group.main.id
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 80
+  to_port                  = 80
+  source_security_group_id = var.load_balancer_security_group_id
 }
 
 resource "aws_security_group_rule" "main-egress" {

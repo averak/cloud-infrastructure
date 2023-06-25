@@ -13,9 +13,10 @@ module "dns" {
 module "ec2" {
   source = "./modules/ec2"
 
-  domain           = var.domain
-  vpc_id           = module.vpc.id
-  public_subnet_id = module.vpc.public_subnet_ids[0]
+  domain                          = var.domain
+  vpc_id                          = module.vpc.id
+  public_subnet_id                = module.vpc.public_subnet_ids[0]
+  load_balancer_security_group_id = module.load_balancer.security_group_id
 }
 
 module "load_balancer" {

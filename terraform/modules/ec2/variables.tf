@@ -18,3 +18,8 @@ variable "public_subnet_id" {
   description = "パブリックサブネットID"
   type        = string
 }
+
+variable "load_balancer_security_group_id" {
+  description = "ロードバランサーのセキュリティグループID"
+  type        = string
+}
