@@ -49,6 +49,15 @@ resource "aws_instance" "main" {
   }
 }
 
+resource "aws_eip" "main" {
+  instance = aws_instance.main.id
+  domain   = "vpc"
+
+  tags = {
+    Name = "${var.domain}-instance-eip"
+  }
+}
+
 resource "aws_security_group" "main" {
   name = "${var.domain}-instance-sg"
 }
